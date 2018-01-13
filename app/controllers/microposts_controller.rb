@@ -1,5 +1,5 @@
 class MicropostsController < ApplicationController
-  before_action :require_user_logged_in
+  before_action :require_user_logged_in, only: [:favoritings]
   before_action :correct_user, only: [:destroy]
 
   def create
@@ -18,6 +18,12 @@ class MicropostsController < ApplicationController
     @micropost.destroy
     flash[:success] = 'メッセージを削除しました。'
     redirect_back(fallback_location: root_path)
+  end
+  
+  def favoritings
+    @user = User.find(params[:id])
+    @favoritings = @user.favoritings.page(params[:page])
+    counts(@micropost)
   end
 
   private
